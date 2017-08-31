@@ -1,0 +1,14 @@
+.container{
+  width: 80px;
+  height: 80px;
+  border: 4px double gray;
+  border-radius: 50%;
+}
+
+.white {
+  background-color: #ddd;
+}
+
+.black {
+  background-color: #222;
+}
