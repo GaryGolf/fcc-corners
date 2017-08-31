@@ -1,0 +1,13 @@
+.container{
+  width: 100px;
+  height: 100px;
+  color: silver;
+}
+
+.black {
+  background-color: #000;
+}
+
+.white {
+  background-color: #fff; 
+}
