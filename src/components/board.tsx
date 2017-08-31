@@ -15,8 +15,6 @@ export default class Board extends React.Component <Props, State> {
       .map(letter=>new Array(8).fill(letter).map((_,idx)=>letter+(idx+1)))
       .reduce((acc,item)=>[...acc,...item],[])
     
-      console.log(this.names)
-    
     this.template = this.names.map((name,idx) => (
       <Square
         key={name}
