@@ -1,4 +1,6 @@
 
+declare type PieceColor = "white" | "black"
+
 declare interface Turn {
   from: string
   to: string
@@ -6,18 +8,18 @@ declare interface Turn {
 
 declare interface PiecePosition {
   id: string
-  color: 'black' | 'white'
+  color: PieceColor
   square: string
 }
 
 declare interface Piece {
   id: string
-  color: 'black' | 'white'
+  color: PieceColor
 }
 
 declare interface Square {
   id: string
-  color: 'black' | 'white'
+  color: PieceColor
   piece: Piece
 }
 

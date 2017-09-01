@@ -10,6 +10,7 @@ import ChecksPiece from './checks-piece'
 interface Props {
   id: string
   piece: Piece
+  movePiece(fromPosition:string,positiom:string):void
   // DnD
   canDrop?: boolean
   isOver?: boolean
@@ -51,11 +52,11 @@ const targetSpec:DnD.DropTargetSpec<any> = {
     }
 
     // Obtain the dragged item
-    const item = monitor.getItem();
+    const item = monitor.getItem() as Piece
 
     // You can do something with it
-    // ChessActions.movePiece(item.fromPosition, props.position);
-    console.log(props)
+    props.movePiece(item.id, props.id)
+    // console.log(item)
 
     // You can also do nothing and return a drop result,
     // which will be available as monitor.getDropResult()
@@ -88,7 +89,9 @@ export default class ChecksSquare extends React.Component <Props, State> {
 
     return connectDropTarget(
       <div className={squareStyle}>
-        {piece && <ChecksPiece id={piece.id} color={piece.color}/>}
+        <div className={styles.wrapper}>
+          {piece && <ChecksPiece id={piece.id} color={piece.color}/>}
+        </div>
       </div>
     )
   }

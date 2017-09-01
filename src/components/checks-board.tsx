@@ -5,13 +5,21 @@ import ChecksSquare from './checks-square'
 
 interface Props {
   board: Board
+  movePiece(from:string,to:string):void
 }
 
 export default (props:Props) => {
 
   return (
     <div className={styles.container}>
-      {props.board.map(square=><ChecksSquare key={square.id} id={square.id} piece={square.piece}/>)}
+      {props.board.map(square=>(
+        <ChecksSquare 
+          key={square.id} 
+          id={square.id} 
+          piece={square.piece}
+          movePiece={props.movePiece}
+        />
+      ))}
     </div>
   )
 }
