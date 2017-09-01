@@ -24,6 +24,8 @@
   "devDependencies": {
     "@types/node": "^8.0.26",
     "@types/react": "^15.0.34",
+    "@types/react-dnd": "^2.0.33",
+    "@types/react-dnd-html5-backend": "^2.1.8",
     "@types/react-dom": "^15.5.1",
     "@types/react-redux": "^4.4.47",
     "@types/redux": "^3.6.0",
@@ -53,10 +55,12 @@
     "webpack-hot-middleware": "^2.18.1"
   },
   "dependencies": {
-    "react": "^15.6.1",
-    "react-dom": "^15.6.1",
-    "react-redux": "^5.0.5",
-    "redux": "^3.7.2",
-    "redux-promise": "^0.5.3"
+    "react": "15.6.1",
+    "react-dnd": "2.2.3",
+    "react-dnd-html5-backend": "2.2.3",
+    "react-dom": "15.6.1",
+    "react-redux": "5.0.5",
+    "redux": "3.7.2",
+    "redux-promise": "0.5.3"
   }
 }
