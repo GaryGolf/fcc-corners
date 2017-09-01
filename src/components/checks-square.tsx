@@ -2,7 +2,7 @@ import * as React from 'react'
 import { findDOMNode } from 'react-dom'
 import * as DnD from 'react-dnd'
 import DropTarget from 'react-dnd/lib/DropTarget'
-import {getSquareColor} from '../helpers/board'
+import {getSquareColor, canPieceMove} from '../helpers/board'
 
 import * as styles from './checks-square.css'
 import ChecksPiece from './checks-piece'
@@ -20,12 +20,12 @@ interface State {}
 
 const targetSpec:DnD.DropTargetSpec<any> = {
 
-  // canDrop(props, monitor) {
-  //   // You can disallow drop based on props or item
-  //   const item = monitor.getItem();
-  //   // return canMakeChessMove(item.fromPosition, props.position);
-  //   return true
-  // },
+  canDrop(props, monitor) {
+    // You can disallow drop based on props or item
+    const item = monitor.getItem() as Piece
+    return canPieceMove(item.id, props.id)
+    // return true
+  },
 
   // hover(props, monitor, component) {
   //   // This is fired very often and lets you perform side effects
@@ -81,10 +81,11 @@ const collect = (connect:DnD.DropTargetConnector, monitor:DnD.DropTargetMonitor)
 export default class ChecksSquare extends React.Component <Props, State> {
 
   render(){
-    const {id, piece, connectDropTarget} = this.props
+    const {id, piece, canDrop, connectDropTarget} = this.props
     const squareStyle = [
       styles.container,
-      getSquareColor(id)=='black'?  styles.black : styles.white
+      getSquareColor(id)=='black'?  styles.black : styles.white,
+      canDrop? styles["can-drop"] : null
     ].join(' ')
 
     return connectDropTarget(

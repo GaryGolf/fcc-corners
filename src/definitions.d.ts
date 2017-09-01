@@ -6,11 +6,11 @@ declare interface Turn {
   to: string
 }
 
-declare interface PiecePosition {
-  id: string
-  color: PieceColor
-  square: string
-}
+// declare interface PiecePosition {
+//   id: string
+//   color: PieceColor
+//   square: string
+// }
 
 declare interface Piece {
   id: string

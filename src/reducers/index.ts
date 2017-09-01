@@ -2,7 +2,7 @@ import { combineReducers, Reducer } from 'redux'
 import board from './board'
 
 export interface RootState {
-  board: PiecePosition[]
+  board: Board
 }
 
 export default combineReducers<RootState>({board})
