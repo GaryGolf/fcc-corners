@@ -24,6 +24,12 @@ export function getSquareColor(id:string): PieceColor {
   else return 'white'
 }
 
+export function canPieceMove(from:string,to:string): boolean {
+  
+    if(canJump(from, to)) return true
+    else return canMove(from, to)
+}
+
 function ID2Number(id: string): number {
   const rows = ['*','A','B','C','D','E','F','G','H']
   const [c,r] = id.split('') as [string, string]
@@ -67,8 +73,7 @@ function canMove(from:string, to:string): boolean {
   }
 }
 
-function canJump(from:string, to:string): boolean {
-  if(isHavePiece(to)) return false
+function canJumpOver(from:string, to:string): boolean {
   
   const f = ID2Number(from)
   const t = ID2Number(to)
@@ -83,50 +88,32 @@ function canJump(from:string, to:string): boolean {
       if(isHavePiece(f-10)) return true
       else return false
     case f + 20 :
-      if(isHavePiece(f-10)) return true
+      if(isHavePiece(f+10)) return true
       else return false
     default :
       return false
   }
 }
 
-function canHyperJump(from:string, to:string): boolean {
+function canJump(from:string, to:string): boolean {
   const state = store.getState()
-  let board:string[] = [from]
-  const check = (f:string):boolean => {
+  const board:string[] = []
+  
+  const check = (f:string): void => {
     
-    const a = state.board
-      .filter(item=>canJump(f,item.id))
-      .map(item=>item.id)
+    const couldJump =  state.board
+    .filter(item=>!item.piece)
+    .filter(item=>canJumpOver(f,item.id))
+    .map(item=>item.id)
+    .filter(item=>!board.includes(item))
 
-    const b = a.filter(item=>!board.includes(item))
-
-    if(b.includes(to)) return true
-
-    if(!b.length) return false
-    board = board.concat(b)
-    b.forEach(item => {
-      return check(item)
+    couldJump.forEach(item =>{
+      board.push(item)
+      check(item)
     })
   }
-  return check(from)
-    //.some(item=>canJump(item.id,to))
+
+  check(from)
+  return board.includes(to)
 }
 
-export function canPieceMove(from:string,to:string): boolean {
-
-  
-  
-    // const state = store.getState()
-
-  // const fromSquare = state.board.find(item=>item.id == from)
-  // const toSquare = state.board.find(item=>item.id == to)
-  // const num = ID2Number(from)
-  // canHyperJump(from, to)
-  if(canJump(from, to)) return true 
-  else if(canMove(from, to)) return true
-  else if(canHyperJump(from, to)) return true
-  
-  return false
-  
-}
