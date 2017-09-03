@@ -1,6 +1,6 @@
 import * as Actions from '../constants/actions'
 
-import {placePieces, getPositionPonits} from '../helpers/board'
+import {placePieces, getPositionPoint, getPositionPoints, canJump} from '../helpers/board'
 
 const white = ['F1','F2','F3','F4','G1','G2','G3','G4','H1','H2','H3','H4']
 const black = ['A5','A6','A7','A8','B5','B6','B7','B8','C5','C6','C7','C8']
@@ -11,6 +11,35 @@ export default function board(state=initialState, action): Board {
     switch(action.type){
         case Actions.NOP :
             break
+        case Actions.MAKE_TURN : {
+            const pPoints = getPositionPoints(state)
+
+            const blackPieces = state
+                .filter(item=>item.piece && item.piece.color == 'black')
+                .map(item => item.id)
+                .map(from=>{
+                    const to = canJump(from)
+                        .sort((a,b)=>getPositionPoint(b)-getPositionPoint(a))
+                    if(!!to && to.length) return { from, to:to[0]}
+                    return null
+                }).filter(item=>!!item)
+
+            // const freeSquares = state
+            //     .filter(item=>!item.piece)
+            //     .map(item=>item.id)
+            //     .sort((a,b)=>getPositionPoint(b)-getPositionPoint(a))
+
+            // const a = blackPieces.map(from=>{
+            //     const to = freeSquares.find(item=>!!canJump(from,item).length)
+            //     console.log(to)
+            //     return to? {from,to}:null
+            // }).filter(item=>!!item)
+
+                
+                action.payload = blackPieces[0]
+                
+            // return [...state]
+        }
         case Actions.MOVE_PIECE : {
             // find piece
             const { from , to} = action.payload
@@ -25,11 +54,7 @@ export default function board(state=initialState, action): Board {
             toSquare.piece = {id:to,color}
             return [...state]
         }
-        case Actions.MAKE_TURN : {
-            const pPoints = getPositionPonits(state)
-            const black = state.filter(item=>item.piece && item.piece.color == 'black')
-            return [...state]
-        }
+        
 
     }
     return state

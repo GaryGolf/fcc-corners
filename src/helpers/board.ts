@@ -26,7 +26,7 @@ export function getSquareColor(id:string): PieceColor {
 
 export function canPieceMove(from:string,to:string): boolean {
   
-    if(canJump(from, to).includes(to)) return true
+    if(canJump(from).includes(to)) return true
 }
 
 function ID2Number(id: string): number {
@@ -75,9 +75,9 @@ function canJumpOver(from:string, to:string): boolean {
   }
 }
 
-function canJump(from:string, to:string): string[] {
+export function canJump(from:string): string[] {
 
-  if(isHavePiece(to)) return []
+  // if(isHavePiece(to)) return []
 
   const board:string[] = []
 
@@ -100,7 +100,7 @@ function canJump(from:string, to:string): string[] {
 
 // Position Points min: 1 max: 8
 
-function getPositionPonit(id: string): number {
+export function getPositionPoint(id: string): number {
   const num = ID2Number(id)
   const a = Math.floor(num/10)
   const b = 9-num%10
@@ -108,11 +108,11 @@ function getPositionPonit(id: string): number {
 }
 
 // Position Points for "black" pieces min: 20 , max: 74
-export function getPositionPonits(board: Board, color = 'black'): number {
+export function getPositionPoints(board: Board, color = 'black'): number {
   return board
     .filter(item=>item.piece && item.piece.color==color)
     .reduce((acc,item)=>{
-      acc += getPositionPonit(item.id)
+      acc += getPositionPoint(item.id)
       return acc
     },0)
 }
