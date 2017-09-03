@@ -77,21 +77,13 @@ function canJumpOver(from:string, to:string): boolean {
   
   const f = ID2Number(from)
   const t = ID2Number(to)
+
   switch(t){
-    case f - 2 :
-      if(isHavePiece(f-1)) return true
-      else return false
-    case f + 2 :
-      if(isHavePiece(f+1)) return true
-      else return false
-    case f - 20 :
-      if(isHavePiece(f-10)) return true
-      else return false
-    case f + 20 :
-      if(isHavePiece(f+10)) return true
-      else return false
-    default :
-      return false
+    case f - 2  : return isHavePiece(f-1)
+    case f + 2  : return isHavePiece(f+1)
+    case f - 20 : return isHavePiece(f-10)
+    case f + 20 : return isHavePiece(f+10)
+    default :     return false
   }
 }
 
@@ -117,3 +109,19 @@ function canJump(from:string, to:string): boolean {
   return board.includes(to)
 }
 
+function getPositionPonit(id: string): number {
+  const num = ID2Number(id)
+  const a = Math.floor(num/10)
+  const b = 9-num%10
+  return Math.min(a,b)
+}
+
+export function getPositionPonits(board: Board, color = 'black'): number {
+  // min: 20 , max: 74
+  return board
+    .filter(item=>item.piece && item.piece.color==color)
+    .reduce((acc,item)=>{
+      acc += getPositionPonit(item.id)
+      return acc
+    },0)
+}
