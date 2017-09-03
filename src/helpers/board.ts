@@ -26,8 +26,7 @@ export function getSquareColor(id:string): PieceColor {
 
 export function canPieceMove(from:string,to:string): boolean {
   
-    if(canJump(from, to)) return true
-    else return canMove(from, to)
+    if(canJump(from, to).includes(to)) return true
 }
 
 function ID2Number(id: string): number {
@@ -45,7 +44,6 @@ function Number2ID(id: number): string {
   return  col+row
 }
 
-
 function isHavePiece(id: number | string): boolean {
   const state = store.getState()
   if(typeof id == 'number') {
@@ -58,26 +56,16 @@ function isHavePiece(id: number | string): boolean {
   return false
 }
 
-function canMove(from:string, to:string): boolean {
-  if(isHavePiece(to)) return false
+function canMove(from:string): Array<string> {
   const f = ID2Number(from)
-  const t = ID2Number(to)
-  switch(t){
-    case f + 1 :
-    case f - 1 :
-    case f + 10 :
-    case f - 10 :
-      return true
-    default :
-      return false
-  }
+  return [f+1,f-1,f+10,f-10]
+    .filter(item => !isHavePiece(item))
+    .map(item => Number2ID(item))
 }
 
 function canJumpOver(from:string, to:string): boolean {
-  
   const f = ID2Number(from)
   const t = ID2Number(to)
-
   switch(t){
     case f - 2  : return isHavePiece(f-1)
     case f + 2  : return isHavePiece(f+1)
@@ -87,27 +75,30 @@ function canJumpOver(from:string, to:string): boolean {
   }
 }
 
-function canJump(from:string, to:string): boolean {
-  const state = store.getState()
+function canJump(from:string, to:string): string[] {
+
+  if(isHavePiece(to)) return []
+
   const board:string[] = []
-  
-  const check = (f:string): void => {
-    
-    const couldJump =  state.board
-    .filter(item=>!item.piece)
-    .filter(item=>canJumpOver(f,item.id))
-    .map(item=>item.id)
-    .filter(item=>!board.includes(item))
 
-    couldJump.forEach(item =>{
-      board.push(item)
-      check(item)
-    })
+  const check = ($from:string): void => {
+    store.getState().board.filter(item=>!item.piece)
+      .filter(item=>canJumpOver($from,item.id))
+      .map(item=>item.id)
+      .filter(item=>!board.includes(item))
+      .forEach(item =>{
+        board.push(item)
+        check(item)
+      })
   }
-
+  // check nearby squares
+  canMove(from).forEach(item=>board.push(item))
+  // check jumps
   check(from)
-  return board.includes(to)
+  return board
 }
+
+// Position Points min: 1 max: 8
 
 function getPositionPonit(id: string): number {
   const num = ID2Number(id)
@@ -116,8 +107,8 @@ function getPositionPonit(id: string): number {
   return Math.min(a,b)
 }
 
+// Position Points for "black" pieces min: 20 , max: 74
 export function getPositionPonits(board: Board, color = 'black'): number {
-  // min: 20 , max: 74
   return board
     .filter(item=>item.piece && item.piece.color==color)
     .reduce((acc,item)=>{

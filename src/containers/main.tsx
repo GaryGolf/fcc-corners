@@ -17,7 +17,8 @@ interface State {}
       board: state.board as Board
   }),
   dispatch => ({
-    movePiece: (from, to) => dispatch({ type: Actions.MOVE_PIECE, payload: {from, to} })
+    movePiece: (from, to) => new Promise( resolve => resolve(dispatch({ type: Actions.MOVE_PIECE, payload: {from, to} })))
+    .then(_=>  dispatch({type: Actions.MAKE_TURN}))
   })
 )
 @DragDropContext(HTML5Backend)

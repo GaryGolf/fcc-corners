@@ -25,6 +25,11 @@ export default function board(state=initialState, action): Board {
             toSquare.piece = {id:to,color}
             return [...state]
         }
+        case Actions.MAKE_TURN : {
+            const pPoints = getPositionPonits(state)
+            const black = state.filter(item=>item.piece && item.piece.color == 'black')
+            return [...state]
+        }
 
     }
     return state
