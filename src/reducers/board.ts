@@ -23,6 +23,7 @@ export default function board(state=initialState, action): Board {
                     if(!!to && to.length) return { from, to:to[0]}
                     return null
                 }).filter(item=>!!item)
+                .sort((a,b)=>getPositionPoint(b.to)-getPositionPoint(a.to))
 
             // const freeSquares = state
             //     .filter(item=>!item.piece)
@@ -36,7 +37,7 @@ export default function board(state=initialState, action): Board {
             // }).filter(item=>!!item)
 
                 
-                action.payload = blackPieces[0]
+                action.payload = blackPieces[1]
                 
             // return [...state]
         }
