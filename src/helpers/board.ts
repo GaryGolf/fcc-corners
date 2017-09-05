@@ -1,4 +1,5 @@
 import store from '../store'
+import {ID2Number, Number2ID} from './square'
 
 export function createBoard(): Board {
   return ['A','B','C','D','E','F','G','H']
@@ -29,20 +30,20 @@ export function canPieceMove(from:string,to:string): boolean {
     if(canJump(from).includes(to)) return true
 }
 
-export function ID2Number(id: string): number {
-  const rows = ['*','A','B','C','D','E','F','G','H']
-  const [c,r] = id.split('') as [string, string]
-  const row = Number(r)
-  const col = rows.findIndex(item => item == c)
-  return col*10+row
-}
+// export function ID2Number(id: string): number {
+//   const rows = ['*','A','B','C','D','E','F','G','H']
+//   const [c,r] = id.split('') as [string, string]
+//   const row = Number(r)
+//   const col = rows.findIndex(item => item == c)
+//   return col*10+row
+// }
 
-export function Number2ID(id: number): string {
-  const rows = ['*','A','B','C','D','E','F','G','H']
-  const col = rows[Math.floor(id/10)]
-  const row = id%10
-  return  col+row
-}
+// export function Number2ID(id: number): string {
+//   const rows = ['*','A','B','C','D','E','F','G','H']
+//   const col = rows[Math.floor(id/10)]
+//   const row = id%10
+//   return  col+row
+// }
 
 function isHavePiece(id: number | string): boolean {
   const state = store.getState()
@@ -58,7 +59,11 @@ function isHavePiece(id: number | string): boolean {
 
 function canMove(from:string): Array<string> {
   const f = ID2Number(from)
+  if(f<10) {
+    console.log('canjump over', from)
+  }
   return [f+1,f-1,f+10,f-10]
+    .filter(item=>item<=88 && item>=11)
     .filter(item => !isHavePiece(item))
     .map(item => Number2ID(item))
 }
@@ -66,6 +71,7 @@ function canMove(from:string): Array<string> {
 function canJumpOver(from:string, to:string): boolean {
   const f = ID2Number(from)
   const t = ID2Number(to)
+
   switch(t){
     case f - 2  : return isHavePiece(f-1)
     case f + 2  : return isHavePiece(f+1)
@@ -116,3 +122,17 @@ export function getPositionPoints(board: Board, color = 'black'): number {
       return acc
     },0)
 }
+
+export function movePiece(from: string, to: string, board: Board): Board {
+  
+    const toSquare = board.find(item=>item.id == to && !item.piece)
+    const fromSquare = board.find(item=>item.piece && item.piece.id == from)
+  
+    if(!toSquare || !fromSquare ) return board
+  
+    const color:PieceColor = fromSquare.piece.color
+    fromSquare.piece = null
+    toSquare.piece = {id:to,color}
+  
+    return [...board]
+  }
