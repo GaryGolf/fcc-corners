@@ -29,7 +29,7 @@ export function canPieceMove(from:string,to:string): boolean {
     if(canJump(from).includes(to)) return true
 }
 
-function ID2Number(id: string): number {
+export function ID2Number(id: string): number {
   const rows = ['*','A','B','C','D','E','F','G','H']
   const [c,r] = id.split('') as [string, string]
   const row = Number(r)
@@ -37,7 +37,7 @@ function ID2Number(id: string): number {
   return col*10+row
 }
 
-function Number2ID(id: number): string {
+export function Number2ID(id: number): string {
   const rows = ['*','A','B','C','D','E','F','G','H']
   const col = rows[Math.floor(id/10)]
   const row = id%10
