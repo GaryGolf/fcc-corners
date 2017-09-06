@@ -10,6 +10,7 @@ import ChecksPiece from './checks-piece'
 interface Props {
   id: string
   piece: Piece
+  board: Board
   movePiece(fromPosition:string,positiom:string):void
   // DnD
   canDrop?: boolean
@@ -23,7 +24,7 @@ const targetSpec:DnD.DropTargetSpec<any> = {
   canDrop(props, monitor) {
     // You can disallow drop based on props or item
     const item = monitor.getItem() as Piece
-    return canPieceMove(item.id, props.id)
+    return canPieceMove(item.id, props.id, props.board)
     // return true
   },
 

@@ -25,9 +25,9 @@ export function getSquareColor(id:string): PieceColor {
   else return 'white'
 }
 
-export function canPieceMove(from:string,to:string): boolean {
+export function canPieceMove(from:string, to:string, board:Board): boolean {
   
-    if(canJump(from).includes(to)) return true
+    if(canJump(from, board).includes(to)) return true
 }
 
 // export function ID2Number(id: string): number {
@@ -45,63 +45,60 @@ export function canPieceMove(from:string,to:string): boolean {
 //   return  col+row
 // }
 
-function isHavePiece(id: number | string): boolean {
-  const state = store.getState()
+function isHavePiece(id: number | string, board:Board): boolean {
   if(typeof id == 'number') {
-    const square = state.board.find(item => item.id == Number2ID(id))
+    const square = board.find(item => item.id == Number2ID(id))
     return (square && !!square.piece)
   } else if ( typeof id == 'string') {
-    const square = state.board.find(item => item.id == id)
+    const square = board.find(item => item.id == id)
     return (square && !!square.piece)
   }
   return false
 }
 
-function canMove(from:string): Array<string> {
+function canMove(from:string, board:Board): Array<string> {
   const f = ID2Number(from)
-  if(f<10) {
-    console.log('canjump over', from)
-  }
+  const r = f%10
   return [f+1,f-1,f+10,f-10]
-    .filter(item=>item<=88 && item>=11)
-    .filter(item => !isHavePiece(item))
+    .filter(item=>item<=88 && item>=11 && item%10 < 9 && item%10 > 0)
+    .filter(item => !isHavePiece(item, board))
     .map(item => Number2ID(item))
 }
 
-function canJumpOver(from:string, to:string): boolean {
+function canJumpOver(from:string, to:string, board:Board): boolean {
   const f = ID2Number(from)
   const t = ID2Number(to)
 
   switch(t){
-    case f - 2  : return isHavePiece(f-1)
-    case f + 2  : return isHavePiece(f+1)
-    case f - 20 : return isHavePiece(f-10)
-    case f + 20 : return isHavePiece(f+10)
+    case f - 2  : return isHavePiece(f-1, board)
+    case f + 2  : return isHavePiece(f+1, board)
+    case f - 20 : return isHavePiece(f-10, board)
+    case f + 20 : return isHavePiece(f+10, board)
     default :     return false
   }
 }
 
-export function canJump(from:string): string[] {
+export function canJump(from:string, board:Board): string[] {
 
   // if(isHavePiece(to)) return []
 
-  const board:string[] = []
+  const stack:string[] = []
 
   const check = ($from:string): void => {
-    store.getState().board.filter(item=>!item.piece)
-      .filter(item=>canJumpOver($from,item.id))
+    board.filter(item=>!item.piece)
+      .filter(item=>canJumpOver($from, item.id, board))
       .map(item=>item.id)
-      .filter(item=>!board.includes(item))
+      .filter(item=>!stack.includes(item))
       .forEach(item =>{
-        board.push(item)
+        stack.push(item)
         check(item)
       })
   }
   // check nearby squares
-  canMove(from).forEach(item=>board.push(item))
+  canMove(from, board).forEach(item=>stack.push(item))
   // check jumps
   check(from)
-  return board
+  return stack
 }
 
 // Position Points min: 1 max: 8

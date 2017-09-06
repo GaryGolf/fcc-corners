@@ -17,6 +17,7 @@ export default (props:Props) => {
           key={square.id} 
           id={square.id} 
           piece={square.piece}
+          board={props.board}
           movePiece={props.movePiece}
         />
       ))}
