@@ -1,5 +1,5 @@
 import store from '../store'
-import {ID2Number, Number2ID} from './square'
+import {ID2Number, Number2ID, isHavePiece} from './square'
 
 export function createBoard(): Board {
   return ['A','B','C','D','E','F','G','H']
@@ -7,6 +7,7 @@ export function createBoard(): Board {
   .reduce((acc,item)=>[...acc,...item],[])
   .map(id=>({ id, color: getSquareColor(id), piece: null }))
 }
+
 export function placePieces(white:string[],black:string[], board:Board=createBoard()): Board {
   return board.map(square=>{
     const id = square.id
@@ -16,7 +17,6 @@ export function placePieces(white:string[],black:string[], board:Board=createBoa
     return {...square, piece}
   })
 }
-
 
 export function getSquareColor(id:string): PieceColor {
   const [col, r] = id.split('') as [string, number]
@@ -28,32 +28,6 @@ export function getSquareColor(id:string): PieceColor {
 export function canPieceMove(from:string, to:string, board:Board): boolean {
   
     if(canJump(from, board).includes(to)) return true
-}
-
-// export function ID2Number(id: string): number {
-//   const rows = ['*','A','B','C','D','E','F','G','H']
-//   const [c,r] = id.split('') as [string, string]
-//   const row = Number(r)
-//   const col = rows.findIndex(item => item == c)
-//   return col*10+row
-// }
-
-// export function Number2ID(id: number): string {
-//   const rows = ['*','A','B','C','D','E','F','G','H']
-//   const col = rows[Math.floor(id/10)]
-//   const row = id%10
-//   return  col+row
-// }
-
-function isHavePiece(id: number | string, board:Board): boolean {
-  if(typeof id == 'number') {
-    const square = board.find(item => item.id == Number2ID(id))
-    return (square && !!square.piece)
-  } else if ( typeof id == 'string') {
-    const square = board.find(item => item.id == id)
-    return (square && !!square.piece)
-  }
-  return false
 }
 
 function canMove(from:string, board:Board): Array<string> {

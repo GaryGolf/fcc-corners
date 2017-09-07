@@ -12,3 +12,14 @@ export function Number2ID(id: number): string {
   const row = id%10
   return  col+row
 }
+
+export function isHavePiece(id: number | string, board:Board): boolean {
+    if(typeof id == 'number') {
+      const square = board.find(item => item.id == Number2ID(id))
+      return (square && !!square.piece)
+    } else if ( typeof id == 'string') {
+      const square = board.find(item => item.id == id)
+      return (square && !!square.piece)
+    }
+    return false
+  }
