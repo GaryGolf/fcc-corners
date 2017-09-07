@@ -97,14 +97,13 @@ export function getPositionPoints(board: Board, color = 'black'): number {
 
 export function movePiece(from: string, to: string, board: Board): Board {
   
-    const toSquare = board.find(item=>item.id == to && !item.piece)
-    const fromSquare = board.find(item=>item.piece && item.piece.id == from)
-  
-    if(!toSquare || !fromSquare ) return board
-  
-    const color:PieceColor = fromSquare.piece.color
-    fromSquare.piece = null
-    toSquare.piece = {id:to,color}
-  
-    return [...board]
+    const f = board.findIndex(item=>item.piece && item.piece.id == from)
+    const t = board.findIndex(item=>item.id == to && !item.piece)
+    if(f==-1 || t==-1 ) return board
+    const color:PieceColor = board[f].piece.color
+    const piece = {id:to,color}
+    const state = [...board]
+    state[t] = {id:to, color:board[t].color,piece} 
+    state[f] = {id:from, color:board[f].color, piece:null}
+    return state
   }

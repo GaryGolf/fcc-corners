@@ -19,6 +19,13 @@ export default function board(state=initialState, action): Board {
 
             const possibleMoves = getPossibleMoves(state)
 
+            const p = possibleMoves
+                .map(move=>{
+                    const board = movePiece(move.from, move.to, [...state])
+                    const points = getPositionPoints(board)
+                    return {...move, points}
+                }).sort((a,b) => b.points - a.points)
+
                 // .join(' ')
                 // .sort((a,b)=>getPositionPoint(b.to)-getPositionPoint(a.to))
             
@@ -42,13 +49,12 @@ export default function board(state=initialState, action): Board {
                 // action.payload = blackPieces[1]
 
                 // return movePiece(blackPieces[1].from, blackPieces[1].to, state )
-                console.log(possibleMoves)
+                console.log(p)
                 
             return [...state]
         }
         case Actions.MOVE_PIECE : {
             // find piece
-            console.log(getPositionPoints(state,'white'))
             const { from , to} = action.payload
             return movePiece(from, to, state)
            
@@ -80,6 +86,7 @@ interface PossibleMove {
     from: string
     to: string
     jump: number
+    points?: number
 }
 
 function getPossibleMoves(board:Board): PossibleMove[]{
