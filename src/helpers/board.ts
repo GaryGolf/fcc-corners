@@ -1,4 +1,4 @@
-import store from '../store'
+// import store from '../store'
 import {ID2Number, Number2ID, isHavePiece} from './square'
 
 export function createBoard(): Board {
@@ -78,13 +78,14 @@ export function canJump(from:string, board:Board): string[] {
 // Position Points min: 1 max: 8
 
 export function getPositionPoint(id: string): number {
+  if(['F4','G4','H4'].includes(id)) return 6
   const num = ID2Number(id)
   const a = Math.floor(num/10)
   const b = 9-num%10
   return Math.min(a,b)
 }
 
-// Position Points for "black" pieces min: 20 , max: 74
+// Position Points for "black" pieces min: 20 , max: 77
 export function getPositionPoints(board: Board, color = 'black'): number {
   return board
     .filter(item=>item.piece && item.piece.color==color)

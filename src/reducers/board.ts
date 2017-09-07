@@ -15,24 +15,17 @@ export default function board(state=initialState, action): Board {
         case Actions.NOP :
             break
         case Actions.MAKE_TURN : {
-            const pPoints = getPositionPoints(state)
+            const startPoints = getPositionPoints(state)
 
-            const blackPieces = state
-                // take black pieces only
-                .filter(item=>item.piece && item.piece.color == 'black')
-                .map(item => item.id)
-                .map(from=>{
-                    const to = canJump(from, state)
-                        .sort((a,b)=>getPositionPoint(b)-getPositionPoint(a))
-                    if(!!to && to.length) {
-                        const i = Math.floor(Math.random()*to.length)
-                        console.log('from: ',from, 'to: ',to.join(' '), '--', to[i])
-                        if(!to[i]) return null
-                        return { from, to:to[i]}
-                    }
-                    return null
-                }).filter(item=>!!item) // remove null
-                .sort((a,b)=>getPositionPoint(b.to)-getPositionPoint(a.to))
+            const possibleMoves = getPossibleMoves(state)
+
+                // .join(' ')
+                // .sort((a,b)=>getPositionPoint(b.to)-getPositionPoint(a.to))
+            
+            // const possibleBoard = possibleMoves 
+            //     .map(moves=>{
+            //         const board = movePiece()
+            //     })
 
             // const freeSquares = state
             //     .filter(item=>!item.piece)
@@ -48,12 +41,14 @@ export default function board(state=initialState, action): Board {
                 
                 // action.payload = blackPieces[1]
 
-                return movePiece(blackPieces[1].from, blackPieces[1].to, state )
+                // return movePiece(blackPieces[1].from, blackPieces[1].to, state )
+                console.log(possibleMoves)
                 
-            // return [...state]
+            return [...state]
         }
         case Actions.MOVE_PIECE : {
             // find piece
+            console.log(getPositionPoints(state,'white'))
             const { from , to} = action.payload
             return movePiece(from, to, state)
            
@@ -71,4 +66,29 @@ export default function board(state=initialState, action): Board {
 
     }
     return state
+}
+
+
+function getBlackPieces(board:Board):string[]{
+    // take black pieces only
+    return board
+        .filter(item=>item.piece && item.piece.color == 'black')
+        .map(item => item.id)
+}
+
+interface PossibleMove {
+    from: string
+    to: string
+    jump: number
+}
+
+function getPossibleMoves(board:Board): PossibleMove[]{
+    return getBlackPieces(board)    
+        .map(from => canJump(from, board) // get all possible moves
+            .map(to=>({from,to, jump:getPositionPoint(to)-getPositionPoint(from)}))
+        ).filter(item=>item.length) // remove nulls
+        .reduce((acc,item)=>{
+            acc.push(...item)
+            return acc
+        },[]).sort((a,b)=> b.jump - a.jump)
 }
