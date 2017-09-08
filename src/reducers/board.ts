@@ -48,10 +48,10 @@ export default function board(state=initialState, action): Board {
                 
                 // action.payload = blackPieces[1]
 
-                // return movePiece(blackPieces[1].from, blackPieces[1].to, state )
-                console.log(p)
+                return movePiece(p[0].from, p[0].to, state )
+                // console.log(p)
                 
-            return [...state]
+            // return [...state]
         }
         case Actions.MOVE_PIECE : {
             // find piece
