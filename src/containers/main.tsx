@@ -2,6 +2,8 @@ import * as React from 'react'
 import { bindActionCreators, Dispatch, Action } from 'redux'
 import DragDropContext from 'react-dnd/lib/DragDropContext'
 import {default as HTML5Backend} from 'react-dnd-html5-backend'
+import { default as TouchBackend } from 'react-dnd-touch-backend'
+import * as isMobile from 'ismobilejs'
 const {connect} = require('react-redux')
 import * as Actions from '../constants/actions'
 
@@ -21,7 +23,7 @@ interface State {}
     .then(_=>  dispatch({type: Actions.MAKE_TURN}))
   })
 )
-@DragDropContext(HTML5Backend)
+@DragDropContext(isMobile.any?TouchBackend:HTML5Backend)
 export default class Main extends React.Component <Props, State> {
   render(){
     const {board, movePiece} = this.props
