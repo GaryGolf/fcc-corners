@@ -59,8 +59,7 @@ export default function board(state=initialState, action): Board[] {
             const { from , to} = action.payload
             const board = state.slice(-1).pop()
             const newBoard = movePiece(from, to, board)
-            state.push(newBoard)
-            return [...state]
+            return [...state, newBoard]
            
             // const toSquare = state.find(item=>item.id == to && !item.piece)
             // const fromSquare = state.find(item=>item.piece && item.piece.id == from)
