@@ -16,7 +16,7 @@ interface Props {
 interface State {}
 @connect(
   state => ({
-      board: state.board as Board
+      board: state.board.slice(-1).pop() as Board
   }),
   dispatch => ({
     movePiece: (from, to) => new Promise( resolve => resolve(dispatch({ type: Actions.MOVE_PIECE, payload: {from, to} })))

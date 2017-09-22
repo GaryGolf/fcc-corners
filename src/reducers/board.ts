@@ -7,22 +7,22 @@ const black = ['A5','A6','A7','A8','B5','B6','B7','B8','C5','C6','C7','C8']
 
 // const black = ['G3','F4']
 // const white = ['D2']
-const initialState = placePieces(white,black) 
+const initialState = [placePieces(white,black)]
 
-export default function board(state=initialState, action): Board {
+export default function board(state=initialState, action): Board[] {
 
     switch(action.type){
         case Actions.NOP :
             break
         case Actions.MAKE_TURN : {
-            const startPoints = getPositionPoints(state)
-
-            const possibleMoves = getPossibleMoves(state)
+            const board = state.pop()
+            const startPoints = getPositionPoints(board)
+            const possibleMoves = getPossibleMoves(board)
 
             const p = possibleMoves
                 .map(move=>{
-                    const board = movePiece(move.from, move.to, [...state])
-                    const points = getPositionPoints(board)
+                    const b = movePiece(move.from, move.to, [...board])
+                    const points = getPositionPoints(b)
                     return {...move, points}
                 }).sort((a,b) => b.points - a.points)
 
@@ -48,7 +48,8 @@ export default function board(state=initialState, action): Board {
                 
                 // action.payload = blackPieces[1]
 
-                return movePiece(p[0].from, p[0].to, state )
+                const newBoard = movePiece(p[0].from, p[0].to, board )
+                return [...state, newBoard]
                 // console.log(p)
                 
             // return [...state]
@@ -56,7 +57,10 @@ export default function board(state=initialState, action): Board {
         case Actions.MOVE_PIECE : {
             // find piece
             const { from , to} = action.payload
-            return movePiece(from, to, state)
+            const board = state.slice(-1).pop()
+            const newBoard = movePiece(from, to, board)
+            state.push(newBoard)
+            return [...state]
            
             // const toSquare = state.find(item=>item.id == to && !item.piece)
             // const fromSquare = state.find(item=>item.piece && item.piece.id == from)
