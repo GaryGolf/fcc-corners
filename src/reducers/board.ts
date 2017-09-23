@@ -72,7 +72,6 @@ export default function board(state=initialState, action): Board[] {
             // return [...state]
         }
         
-
     }
     return state
 }
