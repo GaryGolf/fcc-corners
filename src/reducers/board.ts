@@ -71,6 +71,12 @@ export default function board(state=initialState, action): Board[] {
             // toSquare.piece = {id:to,color}
             // return [...state]
         }
+        case Actions.GET_BACK : {
+            if(state.length == 1) return state
+            const history = [...state]
+            history.pop()
+            return history
+        }
         
     }
     return state

@@ -12,6 +12,7 @@ import ChecksBoard from '../components/checks-board'
 interface Props {
   board?: Board
   movePiece?(from:string,to:string):void
+  getBack?():void
 }
 interface State {}
 @connect(
@@ -20,11 +21,26 @@ interface State {}
   }),
   dispatch => ({
     movePiece: (from, to) => new Promise( resolve => resolve(dispatch({ type: Actions.MOVE_PIECE, payload: {from, to} })))
-    .then(_=>  dispatch({type: Actions.MAKE_TURN}))
+    .then(_=>  dispatch({type: Actions.MAKE_TURN})),
+    getBack: () => dispatch({type: Actions.GET_BACK})
+
   })
 )
 @DragDropContext(isMobile.any?TouchBackend:HTML5Backend)
 export default class Main extends React.Component <Props, State> {
+  constructor(props:Props){
+    super(props)
+    this.getBack = this.getBack.bind(this)
+    window.addEventListener('keyup', this.getBack)
+  }
+  getBack(event){
+    switch(event.key){
+      case 'ArrowLeft' :
+        this.props.getBack()
+      default :
+        break
+    }
+  }
   render(){
     const {board, movePiece} = this.props
     if(!board) return null
