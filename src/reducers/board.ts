@@ -72,10 +72,7 @@ export default function board(state=initialState, action): Board[] {
             // return [...state]
         }
         case Actions.GET_BACK : {
-            if(state.length == 1) return state
-            const history = [...state]
-            history.pop()
-            return history
+            if(state.length > 1) return state.slice(0,-1)
         }
         
     }
