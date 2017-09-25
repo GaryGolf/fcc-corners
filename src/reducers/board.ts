@@ -74,7 +74,6 @@ export default function board(state=initialState, action): Board[] {
         case Actions.GET_BACK : {
             if(state.length > 1) return state.slice(0,-1)
         }
-        
     }
     return state
 }
