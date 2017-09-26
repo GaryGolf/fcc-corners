@@ -16,6 +16,7 @@ interface Props {
   history?: History
   movePiece?(from:string,to:string):void
   getBack?():void
+  dispatch?: Function
 }
 interface State {}
 @withRouter
@@ -35,17 +36,13 @@ interface State {}
 export default class Main extends React.Component <Props, State> {
   constructor(props:Props){
     super(props)
-    this.getBack = this.getBack.bind(this)
     this.movePiece = this.movePiece.bind(this)
-    window.addEventListener('keyup', this.getBack)
   }
-  getBack(event){
-    switch(event.key){
-      case 'ArrowLeft' :
-      this.props.getBack()
-      default :
-      break
-    }
+
+  componentWillReceiveProps(nextProps){
+    const hash = Number(nextProps.history.location.hash.substr(1))
+    const len = nextProps.length - 1
+    if(hash<len) nextProps.getBack()
   }
   
   movePiece(from:string, to: string){
@@ -55,7 +52,7 @@ export default class Main extends React.Component <Props, State> {
   }
 
   render(){
-    const {board, movePiece} = this.props
+    const {board, length} = this.props
     if(!board) return null
     return (
       <div>
