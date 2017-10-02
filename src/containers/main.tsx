@@ -18,6 +18,7 @@ interface Props {
   getBack?():void
   dispatch?: Function
 }
+
 interface State {}
 @withRouter
 @connect(
