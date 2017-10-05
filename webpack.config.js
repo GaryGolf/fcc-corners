@@ -35,11 +35,13 @@ module.exports = {
       },
       {
         test: /\.tsx?$/,
+        include: sourcePath,
         use: PRODUCTION ? 'ts-loader' : ['react-hot-loader', 'ts-loader']
       },
       // css 
       {
         test: /\.css$/,
+        include: sourcePath,
         use: ExtractTextPlugin.extract({
           fallback: 'style-loader',
           use: [
