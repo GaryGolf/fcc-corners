@@ -35,14 +35,14 @@ module.exports = {
       },
       {
         test: /\.tsx?$/,
-          loader: PRODUCTION ? 'ts-loader' : ['react-hot-loader', 'ts-loader']
+        use: PRODUCTION ? 'ts-loader' : ['react-hot-loader', 'ts-loader']
       },
       // css 
       {
         test: /\.css$/,
-        loader: ExtractTextPlugin.extract({
-          fallbackLoader: 'style-loader',
-          loader: [
+        use: ExtractTextPlugin.extract({
+          fallback: 'style-loader',
+          use: [
             {
               loader: 'css-loader',
               query: {
@@ -59,9 +59,9 @@ module.exports = {
         })
       },
       // static assets 
-      { test: /\.html$/, loader: 'html-loader' },
-      { test: /\.png$/, loader: 'url-loader?limit=10000' },
-      { test: /\.jpg$/, loader: 'file-loader' }
+      { test: /\.html$/, use: 'html-loader' },
+      { test: /\.png$/, use: 'url-loader?limit=10000' },
+      { test: /\.jpg$/, use: 'file-loader' }
     ],
   },
   plugins: [
